@@ -1,0 +1,9 @@
+[Unit]
+Description=A simple wallpaper changer
+
+[Service]
+Type=simple
+ExecStart=/bin/wallpaper
+
+[Install]
+WantedBy=default.target
