@@ -1,11 +1,13 @@
 use std::process::Command;
 use chrono::prelude::*;
 
+
 const FOLDERS: [&str; 3] = [
-    "/home/amon/Pictures/wallpapers/night",
-    "/home/amon/Pictures/wallpapers/morning",
-    "/home/amon/Pictures/wallpapers/evening",
+    "/media/data/sync/out/wallpapers/night",
+    "/media/data/sync/out/wallpapers/morning",
+    "/media/data/sync/out/wallpapers/evening",
 ];
+
 
 fn main() {
     let hour = Local::now().hour();
@@ -25,6 +27,7 @@ fn main() {
    
     change_wallpaper(&images[image]);
 }
+
 
 fn load_folder(folder: &str) -> Vec<String> {
     let mut result = Vec::new();
@@ -46,14 +49,15 @@ fn load_folder(folder: &str) -> Vec<String> {
         };
     }
     
-
     return result;
 }
+
 
 fn change_wallpaper(img: &str) {
   let command = format!("/usr/bin/gsettings set org.gnome.desktop.background picture-uri-dark 'file:///{}'", img);
   run_command(&command);
 }
+
 
 fn run_command(command: &str) {
     Command::new("sh")
