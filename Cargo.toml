@@ -8,3 +8,6 @@ edition = "2021"
 [dependencies]
 rand = "0.8.5"
 chrono = "0.4.38"
+config-file = "0.2.3"
+serde ={ features = ["derive"], version = "1.0.203"}
+directories = "5.0"

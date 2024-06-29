@@ -1,25 +1,42 @@
 use std::process::Command;
 use chrono::prelude::*;
+use config::Config;
+use config_file::FromConfigFile;
+use directories::UserDirs;
 
-
-const FOLDERS: [&str; 3] = [
-    "/media/data/sync/out/wallpapers/night",
-    "/media/data/sync/out/wallpapers/morning",
-    "/media/data/sync/out/wallpapers/evening",
-];
-
+mod config;
 
 fn main() {
     let hour = Local::now().hour();
+    
+    let proj_dirs = match UserDirs::new() {
+        Some(dirs) => dirs,
+        None => {
+            print!("Cannot access to config dir");
+            return
+        }
+    };
 
-    let mut folder = FOLDERS[0];
+    let pictures = proj_dirs.picture_dir().unwrap().to_str().unwrap().to_owned();
+    let home: String = proj_dirs.home_dir().to_str().unwrap().to_owned();
+    
+    let config = match Config::from_config_file( home + "/.config/Wallpaper/config.toml") {
+        Ok(folders) => folders,
+        Err(_) => Config {
+            evening: pictures.clone() + "/Wallpapers/evening", 
+            morning: pictures.clone() + "/Wallpapers/morning",
+            night: pictures + "/Wallpapers/night",
+        }
+    };
+    
+    let mut folder = &config.morning;
 
     if hour > 7 {
-        folder = FOLDERS[1];
+        folder = &config.evening;
     }
     
     if hour > 19 {
-        folder = FOLDERS[2];
+        folder = &config.night;
     }
     
     let images = load_folder(folder);
